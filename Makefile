@@ -1,6 +1,6 @@
 .PHONY: down
 down: ## down
-	docker-compose down
+	docker-compose down --remove-orphans
 build: ##build
 	docker-compose build --no-cache
 

@@ -8,7 +8,7 @@ COPY ./ .
 RUN go mod download
 RUN go build -o api main.go
 
-FROM alpine
+FROM alpine as deploy
 RUN apk --no-cache add tzdata
 COPY --from=builder /go/build/api api
 ENTRYPOINT ["/api"]
