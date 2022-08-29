@@ -11,8 +11,8 @@ import (
 
 func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Echo, error) {
 	e := echo.New()
-	e.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, world. you've requested\n")
+	e.GET("/health_check", func(c echo.Context) error {
+		return c.String(http.StatusOK, "Hello, world\n")
 	})
 	return e, nil
 }

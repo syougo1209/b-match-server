@@ -5,7 +5,7 @@ build: ##build
 	docker-compose build --no-cache
 
 migrate: ## Migrate develop database
-	mysqldef -u root -p '' -h 127.0.0.1 -P 3306 root < ./_tools/mysql/schema.sql
+	mysqldef -u root -proot -h 127.0.0.1 -P 3306 b-match < ./_tools/mysql/schema.sql
 
 .PHONY: test
 test: ## Execute tests
