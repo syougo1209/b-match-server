@@ -9,7 +9,7 @@ import (
 	"github.com/syougo1209/b-match-server/domain/model"
 )
 
-func prepareUser(ctx context.Context, t *testing.T, db *sqlx.Tx) *model.User {
+func PrepareUser(ctx context.Context, t *testing.T, db *sqlx.Tx) *model.User {
 	t.Helper()
 	u := &model.User{
 		Name:      "example",
@@ -30,7 +30,7 @@ func prepareUser(ctx context.Context, t *testing.T, db *sqlx.Tx) *model.User {
 	return u
 }
 
-func prepareConversation(ctx context.Context, t *testing.T, db *sqlx.Tx) model.ConversationID {
+func PrepareConversation(ctx context.Context, t *testing.T, db *sqlx.Tx) model.ConversationID {
 	t.Helper()
 
 	result, err := db.ExecContext(ctx, "INSERT INTO conversation (last_message_id) VALUES (?)", 0)
@@ -45,11 +45,36 @@ func prepareConversation(ctx context.Context, t *testing.T, db *sqlx.Tx) model.C
 	return model.ConversationID(id)
 }
 
+func PrepareConversationState(
+	ctx context.Context, t *testing.T, db *sqlx.Tx,
+	cid model.ConversationID, fromUser model.User, toUser model.User,
+) *model.Conversation {
+	t.Helper()
+	c := model.Conversation{
+		ID:                  cid,
+		FromUser:            fromUser,
+		ToUser:              toUser,
+		UnreadMessagesCount: 0,
+		LastReadMessage:     nil,
+		LastMessage:         nil,
+	}
+	_, err := db.ExecContext(
+		ctx,
+		"INSERT INTO conversation_state (conversation_id, from_user_id, to_user_id, unread_messages_count, last_read_message_id) VALUES (?, ?, ?, ?, ?)",
+		c.ID, c.FromUser.ID, c.ToUser.ID,
+		c.UnreadMessagesCount, 0,
+	)
+	if err != nil {
+		t.Fatalf("error insert conversation: %v", err)
+	}
+	return &c
+}
+
 func PrepareMessages(ctx context.Context, t *testing.T, db *sqlx.Tx) (model.Messages, model.ConversationID, int) {
 	t.Helper()
-	user := prepareUser(ctx, t, db)
-	conversationID := prepareConversation(ctx, t, db)
-	otherConversationID := prepareConversation(ctx, t, db)
+	user := PrepareUser(ctx, t, db)
+	conversationID := PrepareConversation(ctx, t, db)
+	otherConversationID := PrepareConversation(ctx, t, db)
 
 	wants := model.Messages{
 		{

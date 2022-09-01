@@ -12,7 +12,7 @@ import (
 	mock_repository "github.com/syougo1209/b-match-server/mock/repository"
 )
 
-func TestFetchConversationMessages_Call(t *testing.T) {
+func TestFetchMessages_Call(t *testing.T) {
 	t.Parallel()
 	ctx := context.Background()
 	conversationID := model.ConversationID(1)
