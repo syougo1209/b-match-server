@@ -9,6 +9,7 @@ require (
 
 require (
 	github.com/caarlos0/env/v6 v6.10.0 // indirect
+	github.com/golang/mock v1.6.0 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/jmoiron/sqlx v1.3.5 // indirect
 	github.com/labstack/gommon v0.3.1 // indirect
