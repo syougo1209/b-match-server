@@ -10,3 +10,6 @@ migrate: ## Migrate develop database
 .PHONY: test
 test: ## Execute tests
 	go test -race -shuffle=on ./...
+
+generate: ## generate codes
+	go generate ./...
