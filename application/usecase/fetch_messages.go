@@ -8,6 +8,7 @@ import (
 	"github.com/syougo1209/b-match-server/domain/repository"
 )
 
+//go:generate mockgen -source=fetch_messages.go -destination=../../mock/usecase/fetch_messages.go
 type FetchMessages interface {
 	Call(ctx context.Context, conversationID model.ConversationID, cursor, limit int) (model.Messages, model.MessageID, error)
 }

@@ -34,6 +34,7 @@ func (mp *MessagePresenter) CreateMessagesRes(messages model.Messages, nextCurso
 	}
 	return response
 }
+
 func convertType(mtype model.MessageType) string {
 	if mtype == model.MessageTypeText {
 		return MessageTypeText
