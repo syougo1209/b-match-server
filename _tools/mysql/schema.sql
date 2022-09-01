@@ -10,10 +10,7 @@ CREATE TABLE `conversation`
 (
     `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '会話の識別子',
     `last_message_id` BIGINT UNSIGNED NOT NULL COMMENT '最後に送信されたメッセージのid',
-    PRIMARY KEY (`id`),
-    CONSTRAINT `fk_last_message_id_in_conversation`
-        FOREIGN KEY (`last_message_id`) REFERENCES `message` (`id`)
-            ON DELETE RESTRICT ON UPDATE RESTRICT
+    PRIMARY KEY (`id`)
 ) Engine=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='ユーザー同士の会話';
 
 CREATE TABLE `message`

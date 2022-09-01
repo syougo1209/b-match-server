@@ -11,7 +11,7 @@ import (
 func NewDBForTest(t *testing.T) *sqlx.DB {
 	t.Helper()
 
-	mysqlDB, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/root?parseTime=true")
+	mysqlDB, err := sql.Open("mysql", "root:root@tcp(127.0.0.1:3306)/b-match?parseTime=true")
 
 	if err != nil {
 		t.Fatal(err)
