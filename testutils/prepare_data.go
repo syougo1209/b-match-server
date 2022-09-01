@@ -45,6 +45,31 @@ func prepareConversation(ctx context.Context, t *testing.T, db *sqlx.Tx) model.C
 	return model.ConversationID(id)
 }
 
+func prepareConversationState(
+	ctx context.Context, t *testing.T, db *sqlx.Tx,
+	cid model.ConversationID, fromUser model.User, toUser model.User,
+) *model.Conversation {
+	t.Helper()
+	c := model.Conversation{
+		ID:                  cid,
+		FromUser:            fromUser,
+		ToUser:              toUser,
+		UnreadMessagesCount: 0,
+		LastReadMessage:     nil,
+		LastMessage:         nil,
+	}
+	_, err := db.ExecContext(
+		ctx,
+		"INSERT INTO conversation_state (conversation_id, from_user_id, to_user_id, unread_messages_count, last_read_message_id) VALUES (?, ?, ?, ?, ?)",
+		c.ID, c.FromUser.ID, c.ToUser.ID,
+		c.UnreadMessagesCount, c.LastReadMessage.ID,
+	)
+	if err != nil {
+		t.Fatalf("error insert conversation: %v", err)
+	}
+	return &c
+}
+
 func PrepareMessages(ctx context.Context, t *testing.T, db *sqlx.Tx) (model.Messages, model.ConversationID, int) {
 	t.Helper()
 	user := prepareUser(ctx, t, db)
