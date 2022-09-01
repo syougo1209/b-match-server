@@ -8,6 +8,7 @@ import (
 	"github.com/syougo1209/b-match-server/domain/repository"
 )
 
+//go:generate mockgen -source=read_messages.go -destination=../../mock/usecase/read_messages.go
 type ReadMessages interface {
 	Call(ctx context.Context, conversationID model.ConversationID, messageID model.MessageID) error
 }
