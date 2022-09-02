@@ -13,7 +13,7 @@ type EasyLogin struct {
 	UseCase usecase.EasyLogin
 }
 type easyLoginRequest struct {
-	ID uint64 `json:"uid" validate:"required"`
+	Uid int `json:"uid" validate:"required"`
 }
 
 func (el *EasyLogin) ServeHTTP(c echo.Context) error {
@@ -23,7 +23,7 @@ func (el *EasyLogin) ServeHTTP(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 
-	jwt, err := el.UseCase.Call(ctx, model.UserID(req.ID))
+	jwt, err := el.UseCase.Call(ctx, model.UserID(req.Uid))
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			return c.JSON(http.StatusNotFound, err.Error())

@@ -32,11 +32,11 @@ type Store interface {
 
 func NewJWTer(s Store) (*JWTer, error) {
 	j := &JWTer{Store: s}
-	privkey, err := jwk.ParseKey(rawPrivateKey)
+	privkey, err := jwk.ParseKey(rawPrivateKey, jwk.WithPEM(true))
 	if err != nil {
 		return nil, fmt.Errorf("failed in NewJWTer: private key: %w", err)
 	}
-	pubkey, err := jwk.ParseKey(rawPubKey)
+	pubkey, err := jwk.ParseKey(rawPubKey, jwk.WithPEM(true))
 	if err != nil {
 		return nil, fmt.Errorf("failed in NewJWTer: public key: %w", err)
 	}
