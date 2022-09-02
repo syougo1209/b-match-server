@@ -8,9 +8,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"github.com/syougo1209/b-match-server/application/usecase"
-	"github.com/syougo1209/b-match-server/auth"
 	"github.com/syougo1209/b-match-server/config"
 	"github.com/syougo1209/b-match-server/infrastructure/database"
+	"github.com/syougo1209/b-match-server/infrastructure/jwter"
 	"github.com/syougo1209/b-match-server/infrastructure/redis"
 	"github.com/syougo1209/b-match-server/interface/handler"
 	"github.com/syougo1209/b-match-server/interface/presenter"
@@ -39,7 +39,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	if err != nil {
 		return nil, err
 	}
-	jwter, err := auth.NewJWTer(rcli)
+	jwter, err := jwter.NewJWTer(rcli)
 	if err != nil {
 		return nil, err
 	}

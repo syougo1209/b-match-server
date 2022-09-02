@@ -1,4 +1,4 @@
-package auth
+package jwter
 
 import (
 	"context"
@@ -51,6 +51,7 @@ func (j *JWTer) GenerateToken(ctx context.Context, u model.User) ([]byte, error)
 		Issuer(`github.com/syougo1209/b-match-server`).
 		Subject("access_token").
 		IssuedAt(time.Now()).
+		Expiration(time.Now().Add(30 * time.Minute)).
 		Build()
 
 	if err != nil {
