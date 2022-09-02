@@ -11,6 +11,8 @@ import (
 type AuthMiddleware struct {
 	j jwter
 }
+
+// infrastructreから依存させるためのinterface
 type jwter interface {
 	CheckLoginState(context.Context, *http.Request) (*model.UserID, error)
 }
@@ -25,14 +27,14 @@ func (am *AuthMiddleware) JwtAuthenticate(next echo.HandlerFunc) echo.HandlerFun
 		if err != nil {
 			return c.JSON(http.StatusForbidden, err.Error())
 		}
-		c = SetContext(c, *uid)
+		c = setContext(c, *uid)
 		return next(c)
 	}
 }
 
 type userIDKey struct{}
 
-func SetContext(c echo.Context, uid model.UserID) echo.Context {
+func setContext(c echo.Context, uid model.UserID) echo.Context {
 	ctx := c.Request().Context()
 	ctx = context.WithValue(ctx, userIDKey{}, uid)
 	c.SetRequest(c.Request().WithContext(ctx))
