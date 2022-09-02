@@ -4,7 +4,6 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
-	"net/http"
 	"time"
 
 	"github.com/google/uuid"
@@ -67,41 +66,4 @@ func (j *JWTer) GenerateToken(ctx context.Context, u model.User) ([]byte, error)
 	}
 
 	return signed, nil
-}
-
-func (j *JWTer) GetToken(ctx context.Context, r *http.Request) (jwt.Token, error) {
-	token, err := jwt.ParseRequest(r, jwt.WithKey(jwa.RS256, j.PublicKey))
-	if err != nil {
-		return nil, err
-	}
-	if _, err := j.Store.Load(ctx, token.JwtID()); err != nil {
-		return nil, fmt.Errorf("GetToekn, %q : %w", token.JwtID(), err)
-	}
-
-	return token, nil
-}
-
-func (j *JWTer) FillContext(r *http.Request) (*http.Request, error) {
-	token, err := j.GetToken(r.Context(), r)
-	if err != nil {
-		return nil, err
-	}
-	uid, err := j.Store.Load(r.Context(), token.JwtID())
-	if err != nil {
-		return nil, err
-	}
-	ctx := SetUserID(r.Context(), uid)
-
-	clone := r.Clone(ctx)
-	return clone, nil
-}
-
-type userIDKey struct{}
-
-func SetUserID(ctx context.Context, uid model.UserID) context.Context {
-	return context.WithValue(ctx, userIDKey{}, uid)
-}
-func GetUserID(ctx context.Context) (model.UserID, bool) {
-	id, ok := ctx.Value(userIDKey{}).(model.UserID)
-	return id, ok
 }
