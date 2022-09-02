@@ -63,7 +63,7 @@ func TestReadMessages_ServeHTTP(t *testing.T) {
 		t.Run(n, func(t *testing.T) {
 			e := echo.New()
 			rec := httptest.NewRecorder()
-			req := httptest.NewRequest(http.MethodPut, "/", strings.NewReader(tt.param.JSON))
+			req := httptest.NewRequest(http.MethodPatch, "/", strings.NewReader(tt.param.JSON))
 			req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 
 			c := e.NewContext(req, rec)
