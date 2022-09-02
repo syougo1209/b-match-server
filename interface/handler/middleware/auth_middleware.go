@@ -13,6 +13,7 @@ type AuthMiddleware struct {
 }
 
 // infrastructreから依存させるためのinterface
+//go:generate mockgen -source=auth_middleware.go -destination=../../../mock/middleware/jwter.go
 type jwter interface {
 	CheckLoginState(context.Context, *http.Request) (*model.UserID, error)
 }
