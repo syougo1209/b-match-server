@@ -5,31 +5,27 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/lestrrat-go/jwx/v2/jwa"
-	"github.com/lestrrat-go/jwx/v2/jwt"
 	"github.com/syougo1209/b-match-server/domain/model"
-	"github.com/syougo1209/b-match-server/infrastructure/jwter"
 )
 
 type AuthMiddleware struct {
-	j *jwter.JWTer
+	j jwter
+}
+type jwter interface {
+	CheckLoginState(context.Context, *http.Request) (*model.UserID, error)
 }
 
-func NewAuthMiddleware(j *jwter.JWTer) *AuthMiddleware {
+func NewAuthMiddleware(j jwter) *AuthMiddleware {
 	return &AuthMiddleware{j}
 }
 
 func (am *AuthMiddleware) JwtAuthenticate(next echo.HandlerFunc) echo.HandlerFunc {
 	return func(c echo.Context) error {
-		token, err := jwt.ParseRequest(c.Request(), jwt.WithKey(jwa.RS256, am.j.PublicKey))
+		uid, err := am.j.CheckLoginState(c.Request().Context(), c.Request())
 		if err != nil {
-			return c.JSON(http.StatusUnauthorized, err.Error())
+			return c.JSON(http.StatusForbidden, err.Error())
 		}
-		uid, err := am.j.Store.Load(c.Request().Context(), token.JwtID())
-		if err != nil {
-			return c.JSON(http.StatusUnauthorized, err.Error())
-		}
-		c = SetContext(c, uid)
+		c = SetContext(c, *uid)
 		return next(c)
 	}
 }

@@ -4,6 +4,7 @@ import (
 	"context"
 	_ "embed"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/google/uuid"
@@ -66,4 +67,16 @@ func (j *JWTer) GenerateToken(ctx context.Context, u model.User) ([]byte, error)
 	}
 
 	return signed, nil
+}
+
+func (j *JWTer) CheckLoginState(ctx context.Context, r *http.Request) (*model.UserID, error) {
+	token, err := jwt.ParseRequest(r, jwt.WithKey(jwa.RS256, j.PublicKey))
+	if err != nil {
+		return nil, fmt.Errorf("checkloginstate failed to parseRequest: %w", err)
+	}
+	uid, err := j.Store.Load(ctx, token.JwtID())
+	if err != nil {
+		return nil, fmt.Errorf("checkloginstate failed to load uid: %w", err)
+	}
+	return &uid, nil
 }
