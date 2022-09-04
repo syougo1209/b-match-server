@@ -2,6 +2,7 @@ package router
 
 import (
 	"context"
+	"log"
 	"net/http"
 
 	"github.com/go-playground/validator"
@@ -23,10 +24,12 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 
 	rcli, err := redis.NewRedis(ctx, cfg)
 	if err != nil {
+		log.Printf("failed to start redis: %v", err)
 		return nil, err
 	}
 	jwter, err := jwter.NewJWTer(rcli)
 	if err != nil {
+		log.Printf("failed to start jwter: %v", err)
 		return nil, err
 	}
 
