@@ -35,6 +35,20 @@ func (m *MockConversationStateRepository) EXPECT() *MockConversationStateReposit
 	return m.recorder
 }
 
+// IncrementMessageCount mocks base method.
+func (m *MockConversationStateRepository) IncrementMessageCount(ctx context.Context, toUID model.UserID, conversationID model.ConversationID) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "IncrementMessageCount", ctx, toUID, conversationID)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// IncrementMessageCount indicates an expected call of IncrementMessageCount.
+func (mr *MockConversationStateRepositoryMockRecorder) IncrementMessageCount(ctx, toUID, conversationID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "IncrementMessageCount", reflect.TypeOf((*MockConversationStateRepository)(nil).IncrementMessageCount), ctx, toUID, conversationID)
+}
+
 // ReadMessages mocks base method.
 func (m *MockConversationStateRepository) ReadMessages(ctx context.Context, uid model.UserID, conversationID model.ConversationID, messageID model.MessageID) error {
 	m.ctrl.T.Helper()

@@ -37,11 +37,11 @@ func (cm *CreateTextMessage) ServeHTTP(c echo.Context) error {
 	message, err := cm.UseCase.Call(ctx, model.ConversationID(req.ConversationID), req.Text)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
-			log.Printf("Could not access a resource that should have existed: %w", err)
+			log.Printf("Could not access a resource that should have existed: %v", err)
 			return c.JSON(http.StatusNotFound, err.Error())
 		}
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	res := cm.Presenter.MessageRes(message, cm.Config)
+	res := cm.Presenter.CreateMessageRes(*message)
 	return c.JSON(http.StatusCreated, res)
 }

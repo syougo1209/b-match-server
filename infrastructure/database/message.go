@@ -46,6 +46,32 @@ func (r *MessageRepository) FetchMessages(
 	return messages, nil
 }
 
+func (r *MessageRepository) CreateTextMessage(ctx context.Context, conversationID model.ConversationID, uid model.UserID, text string, now time.Time) (*model.Message, error) {
+	tx, ok := GetTx(ctx)
+	if !ok {
+		return nil, fmt.Errorf("failed to start transaction")
+	}
+
+	query := `INSERT INTO message (send_user_id, conversation_id, type, text, created_at) VALUES (?,?,?,?,?);`
+	result, err := tx.ExecContext(ctx, query, uid, conversationID, model.MessageTypeText, text, now)
+	if err != nil {
+		return nil, fmt.Errorf("failed to insert message: %w", err)
+	}
+	id, err := result.LastInsertId()
+	if err != nil {
+		return nil, fmt.Errorf("CreateTextMessage LastInsertID %w", err)
+	}
+	message := &model.Message{
+		ID:             model.MessageID(id),
+		SendUserID:     model.UserID(uid),
+		ConversationID: model.ConversationID(conversationID),
+		Type:           model.MessageTypeText,
+		Text:           text,
+		CreatedAt:      now,
+	}
+	return message, nil
+}
+
 type Message struct {
 	ID             uint64    `db:"id"`
 	SendUserID     uint64    `db:"send_user_id"`
