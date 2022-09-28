@@ -7,6 +7,5 @@ type Conversation struct {
 	ToUser              User
 	FromUser            User
 	UnreadMessagesCount uint
-	LastReadMessage     *Message
 	LastMessage         *Message
 }

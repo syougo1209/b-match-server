@@ -55,7 +55,6 @@ func PrepareConversationState(
 		FromUser:            fromUser,
 		ToUser:              toUser,
 		UnreadMessagesCount: 0,
-		LastReadMessage:     nil,
 		LastMessage:         nil,
 	}
 	_, err := db.ExecContext(
