@@ -4,6 +4,7 @@ import (
 	"errors"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
@@ -34,7 +35,8 @@ func (cm *CreateTextMessage) ServeHTTP(c echo.Context) error {
 		return c.JSON(http.StatusUnprocessableEntity, err.Error())
 	}
 	ctx := c.Request().Context()
-	message, err := cm.UseCase.Call(ctx, model.ConversationID(req.ConversationID), req.Text)
+	now := time.Now()
+	message, err := cm.UseCase.Call(ctx, model.ConversationID(req.ConversationID), req.Text, now)
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			log.Printf("Could not access a resource that should have existed: %v", err)
