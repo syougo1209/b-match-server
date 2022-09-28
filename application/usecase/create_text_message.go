@@ -44,7 +44,7 @@ func (cm *createMessage) Call(ctx context.Context, cid model.ConversationID, tex
 }
 
 func (cm *createMessage) createMessage(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error) {
-	uid := model.UserID(1)
+	uid := model.UserID(140)
 
 	m, err := cm.messageRepo.CreateTextMessage(ctx, cid, uid, text, now)
 	if err != nil {
