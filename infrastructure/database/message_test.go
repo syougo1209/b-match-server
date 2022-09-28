@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/syougo1209/b-match-server/domain/model"
@@ -44,6 +45,38 @@ func TestMessageRepository_FetchMessages(t *testing.T) {
 			}
 			if d := cmp.Diff(gots, tt.want); len(d) != 0 {
 				t.Errorf("differs: (-got, +want)\n%s", d)
+			}
+		})
+	}
+}
+func TestRepository_CreateTextMessage(t *testing.T) {
+	ctx := context.Background()
+
+	db := testutils.NewDBForTest(t)
+	tx, err := db.BeginTxx(ctx, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	ctx = context.WithValue(ctx, &txKey, tx)
+	t.Cleanup(func() { _ = tx.Rollback() })
+
+	user := testutils.PrepareUser(ctx, t, tx)
+	cid := testutils.PrepareConversation(ctx, t, tx)
+
+	repo := MessageRepository{
+		Db: tx,
+	}
+	tests := map[string]struct {
+		err error
+	}{
+		"Insertに成功すること": {nil},
+	}
+	for n := range tests {
+		t.Run(n, func(t *testing.T) {
+			_, err := repo.CreateTextMessage(ctx, cid, user.ID, "test text", time.Now())
+			if err != nil {
+				t.Fatalf("want no error, but got %v", err)
 			}
 		})
 	}
