@@ -22,13 +22,13 @@ func (cr *ConversationRepository) UpdateLastMessageID(ctx context.Context, conve
 	query := `
 	  select *
 	  from conversation
-		WHERE conversation_id =?
+		WHERE id =?
 	`
 	if err := cr.Db.GetContext(ctx, &dto, query, conversationID); err != nil {
 		if err == sql.ErrNoRows {
-			return fmt.Errorf("failed to GetContext conversation by conversation_id=%d: %w", conversationID, model.ErrNotFound)
+			return fmt.Errorf("failed to GetContext conversation by id=%d: %w", conversationID, model.ErrNotFound)
 		}
-		return fmt.Errorf("failed to GetContext conversation by conversation_id=%d: %w", conversationID, model.ErrNotFound)
+		return fmt.Errorf("failed to GetContext conversation by id=%d: %w", conversationID, model.ErrNotFound)
 	}
 
 	tx, ok := GetTx(ctx)
@@ -39,7 +39,7 @@ func (cr *ConversationRepository) UpdateLastMessageID(ctx context.Context, conve
 		UPDATE
 		conversation
 		SET last_message_id=?
-		WHERE conversation_id =?
+		WHERE id =?
 	`
 	if _, err := tx.ExecContext(ctx, uquery, messageID, conversationID); err != nil {
 		return fmt.Errorf("failed to update conversationState: %w", err)
