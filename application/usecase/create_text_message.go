@@ -9,8 +9,9 @@ import (
 	"github.com/syougo1209/b-match-server/domain/repository"
 )
 
+//go:generate mockgen -source=create_text_message.go -destination=../../mock/usecase/create_text_message.go
 type CreateTextMessage interface {
-	Call(ctx context.Context, cid model.ConversationID, text string) (*model.Message, error)
+	Call(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error)
 }
 type createMessage struct {
 	messageRepo          repository.MessageRepository
@@ -31,9 +32,9 @@ func NewCreateMessage(
 	}
 }
 
-func (cm *createMessage) Call(ctx context.Context, cid model.ConversationID, text string) (*model.Message, error) {
+func (cm *createMessage) Call(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error) {
 	m, err := cm.transaction.BeginTx(ctx, func(ctx context.Context) (interface{}, error) {
-		return cm.createMessage(ctx, cid, text)
+		return cm.createMessage(ctx, cid, text, now)
 	})
 	if m != nil {
 		return m.(*model.Message), err
@@ -42,9 +43,8 @@ func (cm *createMessage) Call(ctx context.Context, cid model.ConversationID, tex
 	}
 }
 
-func (cm *createMessage) createMessage(ctx context.Context, cid model.ConversationID, text string) (*model.Message, error) {
-	now := time.Now()
-	uid := model.UserID(1)
+func (cm *createMessage) createMessage(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error) {
+	uid := model.UserID(140)
 
 	m, err := cm.messageRepo.CreateTextMessage(ctx, cid, uid, text, now)
 	if err != nil {

@@ -35,6 +35,16 @@ func (mp *MessagePresenter) CreateMessagesRes(messages model.Messages, nextCurso
 	return response
 }
 
+func (mp *MessagePresenter) CreateMessageRes(message model.Message) MessageJSON {
+	mtype := convertType(message.Type)
+	return MessageJSON{
+		ID:         uint64(message.ID),
+		Content:    message.Text,
+		Type:       mtype,
+		SendUserId: uint64(message.SendUserID),
+		CreatedAt:  message.CreatedAt,
+	}
+}
 func convertType(mtype model.MessageType) string {
 	if mtype == model.MessageTypeText {
 		return MessageTypeText

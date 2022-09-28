@@ -7,6 +7,7 @@ package mock_repository
 import (
 	context "context"
 	reflect "reflect"
+	time "time"
 
 	gomock "github.com/golang/mock/gomock"
 	model "github.com/syougo1209/b-match-server/domain/model"
@@ -33,6 +34,21 @@ func NewMockMessageRepository(ctrl *gomock.Controller) *MockMessageRepository {
 // EXPECT returns an object that allows the caller to indicate expected use.
 func (m *MockMessageRepository) EXPECT() *MockMessageRepositoryMockRecorder {
 	return m.recorder
+}
+
+// CreateTextMessage mocks base method.
+func (m *MockMessageRepository) CreateTextMessage(ctx context.Context, conversationID model.ConversationID, uid model.UserID, text string, now time.Time) (*model.Message, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CreateTextMessage", ctx, conversationID, uid, text, now)
+	ret0, _ := ret[0].(*model.Message)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CreateTextMessage indicates an expected call of CreateTextMessage.
+func (mr *MockMessageRepositoryMockRecorder) CreateTextMessage(ctx, conversationID, uid, text, now interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CreateTextMessage", reflect.TypeOf((*MockMessageRepository)(nil).CreateTextMessage), ctx, conversationID, uid, text, now)
 }
 
 // FetchMessages mocks base method.
