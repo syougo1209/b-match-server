@@ -9,7 +9,6 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/syougo1209/b-match-server/application/usecase"
-	"github.com/syougo1209/b-match-server/config"
 	"github.com/syougo1209/b-match-server/domain/model"
 	"github.com/syougo1209/b-match-server/interface/presenter"
 )
@@ -18,7 +17,6 @@ type CreateTextMessage struct {
 	UseCase   usecase.CreateTextMessage
 	Presenter presenter.MessagePresenter
 	Validator *validator.Validate
-	Config    *config.Config
 }
 
 type requestParam struct {

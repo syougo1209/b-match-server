@@ -36,7 +36,9 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	//repository
 	mr := &database.MessageRepository{Db: xdb}
 	csr := &database.ConversationStateRepository{Db: xdb}
+	cr := &database.ConversationRepository{Db: xdb}
 	ur := &database.UserRepository{Db: xdb}
+	tx := database.NewTransaction(xdb)
 	//presenter
 	mp := presenter.MessagePresenter{}
 
@@ -59,6 +61,10 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	ucrm := usecase.NewReadMessages(csr)
 	rmHandler := handler.ReadMessages{UseCase: ucrm, Validator: v}
 	convesationGroup.PATCH("/:id/read_message", rmHandler.ServeHTTP)
+
+	ucctm := usecase.NewCreateMessage(mr, csr, cr, tx)
+	ctmHandler := handler.CreateTextMessage{UseCase: ucctm, Presenter: mp, Validator: v}
+	e.POST("/conversations/:id/messages", ctmHandler.ServeHTTP)
 
 	return e, nil
 }
