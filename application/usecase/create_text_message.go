@@ -9,6 +9,7 @@ import (
 	"github.com/syougo1209/b-match-server/domain/repository"
 )
 
+//go:generate mockgen -source=create_text_message.go -destination=../../mock/usecase/create_text_message.go
 type CreateTextMessage interface {
 	Call(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error)
 }
