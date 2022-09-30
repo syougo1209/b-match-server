@@ -60,7 +60,7 @@ func (cr *ConversationRepository) UpdateLastMessageID(ctx context.Context, conve
 }
 
 func (cr *ConversationRepository) FetchConversaionList(ctx context.Context, uid model.UserID) (model.Conversations, error) {
-	conversationsDTO := []*ConversationInfo{}
+	conversationsDTO := &[]*ConversationInfo{}
 	cquery := `
 		select cs.conversation_id, cs.to_user_id, cs.unread_messages_count, c.last_message_id, m.type, m.text, m.created_at
 		from conversation as c
@@ -73,11 +73,11 @@ func (cr *ConversationRepository) FetchConversaionList(ctx context.Context, uid 
 		return nil, fmt.Errorf("failed to SelectContext conversationInfo by from_user_id=%d: %w", uid, err)
 	}
 
-	toUserIDs := make([]uint64, len(conversationsDTO))
-	for i, v := range conversationsDTO {
+	toUserIDs := make([]uint64, len(*conversationsDTO))
+	for i, v := range *conversationsDTO {
 		toUserIDs[i] = v.ToUserID
 	}
-	toUsers := []User{}
+	toUsers := &[]User{}
 	uquery := `
     select *
 		from user
@@ -93,8 +93,8 @@ func (cr *ConversationRepository) FetchConversaionList(ctx context.Context, uid 
 		return nil, fmt.Errorf("failed to SelectContext toUsers: %w", err)
 	}
 
-	conversations := make(model.Conversations, len(conversationsDTO))
-	for ci, cv := range conversationsDTO {
+	conversations := make(model.Conversations, len(*conversationsDTO))
+	for ci, cv := range *conversationsDTO {
 		conversations[ci] = &model.Conversation{
 			ID:                  model.ConversationID(cv.ConversationID),
 			UnreadMessagesCount: cv.UnreadMessagesCount,
@@ -104,7 +104,7 @@ func (cr *ConversationRepository) FetchConversaionList(ctx context.Context, uid 
 				CreatedAt: cv.LastMessageCreatedAt,
 			},
 		}
-		for _, uv := range toUsers {
+		for _, uv := range *toUsers {
 			if cv.ToUserID == uv.ID {
 				conversations[ci].ToUser = model.User{
 					ID:        model.UserID(uv.ID),
