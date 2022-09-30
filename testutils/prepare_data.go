@@ -52,7 +52,7 @@ func PrepareConversationState(
 	t.Helper()
 	c := model.Conversation{
 		ID:                  cid,
-		FromUser:            fromUser,
+		FromUser:            &fromUser,
 		ToUser:              toUser,
 		UnreadMessagesCount: 0,
 		LastMessage:         nil,
