@@ -33,4 +33,5 @@ type DbConnection interface {
 	ExecContext(ctx context.Context, query string, args ...any) (sql.Result, error)
 	SelectContext(ctx context.Context, dest interface{}, query string, args ...any) error
 	GetContext(ctx context.Context, dest interface{}, query string, args ...interface{}) error
+	Rebind(query string) string
 }

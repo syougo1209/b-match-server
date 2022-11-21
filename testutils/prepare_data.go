@@ -52,10 +52,9 @@ func PrepareConversationState(
 	t.Helper()
 	c := model.Conversation{
 		ID:                  cid,
-		FromUser:            fromUser,
+		FromUser:            &fromUser,
 		ToUser:              toUser,
 		UnreadMessagesCount: 0,
-		LastReadMessage:     nil,
 		LastMessage:         nil,
 	}
 	_, err := db.ExecContext(
@@ -68,6 +67,64 @@ func PrepareConversationState(
 		t.Fatalf("error insert conversation: %v", err)
 	}
 	return &c
+}
+func PrepareConversationSet(ctx context.Context, t *testing.T, db *sqlx.Tx, fromUser model.User, toUser model.User) (model.Conversation, model.Message) {
+	t.Helper()
+	c := model.Conversation{
+		ToUser:              toUser,
+		FromUser:            &fromUser,
+		UnreadMessagesCount: 0,
+		LastMessage:         nil,
+	}
+	result, err := db.ExecContext(ctx, "INSERT INTO conversation (last_message_id) VALUES (?)", 0)
+	if err != nil {
+		t.Fatalf("error insert conversation: %v", err)
+	}
+	cid, err := result.LastInsertId()
+	if err != nil {
+		t.Fatalf("error got conversationID: %v", err)
+	}
+	c.ID = model.ConversationID(cid)
+	_, err = db.ExecContext(
+		ctx,
+		"INSERT INTO conversation_state (conversation_id, from_user_id, to_user_id, unread_messages_count, last_read_message_id) VALUES (?, ?, ?, ?, ?)",
+		c.ID, c.FromUser.ID, c.ToUser.ID,
+		c.UnreadMessagesCount, 0,
+	)
+	if err != nil {
+		t.Fatalf("error insert conversationState: %v", err)
+	}
+	m := model.Message{
+		SendUserID:     fromUser.ID,
+		CreatedAt:      time.Now(),
+		ConversationID: c.ID,
+		Type:           model.MessageTypeText,
+		Text:           "test",
+	}
+	result, err = db.ExecContext(
+		ctx,
+		"INSERT INTO message (send_user_id, conversation_id, type, text, created_at) VALUES (?, ?, ?, ?, ?)",
+		m.SendUserID, m.ConversationID, m.Type, m.Text, m.CreatedAt,
+	)
+	if err != nil {
+		t.Fatalf("error insert message: %v", err)
+	}
+	mid, err := result.LastInsertId()
+	if err != nil {
+		t.Fatalf("error got messageID: %v", err)
+	}
+	m.ID = model.MessageID(mid)
+	c.LastMessage = &model.LastMessage{
+		Type:      m.Type,
+		Text:      m.Text,
+		CreatedAt: m.CreatedAt,
+	}
+	_, err = db.ExecContext(
+		ctx,
+		`UPDATE conversation SET last_message_id=? WHERE id =?`,
+		m.ID, c.ID,
+	)
+	return c, m
 }
 
 func PrepareMessages(ctx context.Context, t *testing.T, db *sqlx.Tx) (model.Messages, model.ConversationID, int) {

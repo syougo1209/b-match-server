@@ -1,12 +1,20 @@
 package model
 
+import "time"
+
 type ConversationID uint64
 
+type LastMessage struct {
+	Type      MessageType
+	Text      string
+	CreatedAt time.Time
+}
 type Conversation struct {
 	ID                  ConversationID
 	ToUser              User
-	FromUser            User
+	FromUser            *User
 	UnreadMessagesCount uint
-	LastReadMessage     *Message
-	LastMessage         *Message
+	LastMessage         *LastMessage
 }
+
+type Conversations []*Conversation

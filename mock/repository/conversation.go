@@ -35,6 +35,21 @@ func (m *MockConversationRepository) EXPECT() *MockConversationRepositoryMockRec
 	return m.recorder
 }
 
+// FetchConversaionList mocks base method.
+func (m *MockConversationRepository) FetchConversaionList(ctx context.Context, uid model.UserID) (model.Conversations, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "FetchConversaionList", ctx, uid)
+	ret0, _ := ret[0].(model.Conversations)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// FetchConversaionList indicates an expected call of FetchConversaionList.
+func (mr *MockConversationRepositoryMockRecorder) FetchConversaionList(ctx, uid interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "FetchConversaionList", reflect.TypeOf((*MockConversationRepository)(nil).FetchConversaionList), ctx, uid)
+}
+
 // UpdateLastMessageID mocks base method.
 func (m *MockConversationRepository) UpdateLastMessageID(ctx context.Context, conversationID model.ConversationID, messageID model.MessageID) error {
 	m.ctrl.T.Helper()

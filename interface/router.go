@@ -41,6 +41,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	tx := database.NewTransaction(xdb)
 	//presenter
 	mp := presenter.MessagePresenter{}
+	cp := presenter.ConversationPresenter{}
 
 	authMiddleware := middleware.NewAuthMiddleware(jwter)
 
@@ -65,6 +66,10 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	ucctm := usecase.NewCreateMessage(mr, csr, cr, tx)
 	ctmHandler := handler.CreateTextMessage{UseCase: ucctm, Presenter: mp, Validator: v}
 	e.POST("/conversations/:id/messages", ctmHandler.ServeHTTP)
+
+	ucfcl := usecase.NewFetchConversationList(cr)
+	fclHandler := handler.FetchConversationList{UseCase: ucfcl, Presenter: cp}
+	e.GET("/me/conversations", fclHandler.ServeHTTP)
 
 	return e, nil
 }
