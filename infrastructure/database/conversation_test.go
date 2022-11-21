@@ -62,16 +62,33 @@ func TestConversationRepository_FetchConversaionList(t *testing.T) {
 	repo := ConversationRepository{
 		Db: tx,
 	}
+	fromUser := testutils.PrepareUser(ctx, t, tx)
+	toUser := testutils.PrepareUser(ctx, t, tx)
+	conversation, _ := testutils.PrepareConversationSet(ctx, t, tx, *fromUser, *toUser)
 
+	conversation = model.Conversation{
+		ID:                  conversation.ID,
+		UnreadMessagesCount: conversation.UnreadMessagesCount,
+		LastMessage: &model.LastMessage{
+			Type:      conversation.LastMessage.Type,
+			Text:      conversation.LastMessage.Text,
+			CreatedAt: conversation.LastMessage.CreatedAt,
+		},
+		ToUser: conversation.ToUser,
+	}
+
+	conversations := model.Conversations{
+		&conversation,
+	}
 	tests := map[string]struct {
 		uid           model.UserID
 		conversations model.Conversations
 	}{
-		"ユーザーに紐付いた会話の一覧が取得できること": {},
+		"ユーザーに紐付いた会話の一覧が取得できること": {fromUser.ID, conversations},
 	}
 	for n, tt := range tests {
 		t.Run(n, func(t *testing.T) {
-			gotConversations, err = repo.FetchConversaionList(ctx, tt.uid)
+			gotConversations, err := repo.FetchConversaionList(ctx, tt.uid)
 			if err != nil {
 				t.Fatalf("error during FetchConversaionList: %v", err)
 			}

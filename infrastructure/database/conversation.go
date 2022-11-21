@@ -83,6 +83,9 @@ func (cr *ConversationRepository) FetchConversaionList(ctx context.Context, uid 
 		from user
 		where id in (?)
 	`
+	if len(toUserIDs) == 0 {
+		return make(model.Conversations, 0), nil
+	}
 	usql, uparams, err := sqlx.In(uquery, toUserIDs)
 	if err != nil {
 		return nil, fmt.Errorf("failed to create In query: %w", err)
