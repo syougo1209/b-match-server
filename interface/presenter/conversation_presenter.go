@@ -41,10 +41,10 @@ func (cp *ConversationPresenter) CreateConversationListRes(conversations model.C
 
 type ConversationJSON struct {
 	ID                  uint64       `json:"id"`
-	UnreadMessagesCount uint         `json:"unread_message_count"`
-	UpdatedAt           time.Time    `json:"updated_at"`
-	LastMessage         string       `json:"last_message"`
-	ToUser              userResponse `json:"to_user"`
+	UnreadMessagesCount uint         `json:"unreadMessageCount"`
+	UpdatedAt           time.Time    `json:"updatedAt"`
+	LastMessage         string       `json:"lastMessage"`
+	ToUser              userResponse `json:"toUser"`
 }
 
 type ConversationsResponse struct {
