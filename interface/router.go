@@ -16,6 +16,8 @@ import (
 	"github.com/syougo1209/b-match-server/interface/handler"
 	"github.com/syougo1209/b-match-server/interface/handler/middleware"
 	"github.com/syougo1209/b-match-server/interface/presenter"
+
+	echoMiddleware "github.com/labstack/echo/v4/middleware"
 )
 
 func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Echo, error) {
@@ -32,6 +34,10 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 		log.Printf("failed to start jwter: %v", err)
 		return nil, err
 	}
+	e.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+	}))
 
 	//repository
 	mr := &database.MessageRepository{Db: xdb}
