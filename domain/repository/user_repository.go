@@ -8,4 +8,5 @@ import (
 
 type UserRepository interface {
 	FindByID(ctx context.Context, uid model.UserID) (*model.User, error)
+	FindBySub(ctx context.Context, sub string) (*model.UserID, error)
 }

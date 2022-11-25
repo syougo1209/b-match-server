@@ -2,12 +2,14 @@ package handler
 
 import (
 	"errors"
+	"log"
 	"net/http"
 
 	"github.com/go-playground/validator"
 	"github.com/labstack/echo/v4"
 	"github.com/syougo1209/b-match-server/application/usecase"
 	"github.com/syougo1209/b-match-server/domain/model"
+	"github.com/syougo1209/b-match-server/interface/handler/middleware"
 )
 
 type ReadMessages struct {
@@ -29,7 +31,12 @@ func (rm *ReadMessages) ServeHTTP(c echo.Context) error {
 	}
 
 	ctx := c.Request().Context()
-	err := rm.UseCase.Call(ctx, model.ConversationID(req.ID), model.MessageID(req.ReadMessageID))
+	uid, ok := middleware.GetUserIDContext(ctx)
+	if !ok {
+		log.Fatal("contextからuser idが取得できなかった")
+		return c.JSON(http.StatusInternalServerError, "contextからuser idが取得できなかった")
+	}
+	err := rm.UseCase.Call(ctx, uid, model.ConversationID(req.ID), model.MessageID(req.ReadMessageID))
 	if err != nil {
 		if errors.Is(err, model.ErrNotFound) {
 			return c.JSON(http.StatusNotFound, err.Error())

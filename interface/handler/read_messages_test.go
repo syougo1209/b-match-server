@@ -11,6 +11,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/syougo1209/b-match-server/domain/model"
+	"github.com/syougo1209/b-match-server/interface/handler/middleware"
 	mock_usecase "github.com/syougo1209/b-match-server/mock/usecase"
 	"github.com/syougo1209/b-match-server/testutils"
 )
@@ -32,27 +33,27 @@ func TestReadMessages_ServeHTTP(t *testing.T) {
 		"パラメータが不適切な時": {
 			param: param{"1", invalidJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 			},
 			status: http.StatusBadRequest},
 		"usecaseからerrNotFoundエラーが返ってくる時": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(model.ErrNotFound)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(model.ErrNotFound)
 			},
 			status: http.StatusNotFound,
 		},
 		"usecaseからerrNotFound以外のエラーが返ってくる時": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(errors.New("error"))
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(errors.New("error"))
 			},
 			status: http.StatusInternalServerError,
 		},
 		"処理が適切に完了したとき": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(nil)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(nil)
 			},
 			status: http.StatusOK,
 		},
@@ -70,6 +71,7 @@ func TestReadMessages_ServeHTTP(t *testing.T) {
 			c.SetPath("/conversations/:id/read_message")
 			c.SetParamNames("id")
 			c.SetParamValues(tt.param.ID)
+			middleware.SetUserIDContext(c, 1)
 
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()

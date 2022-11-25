@@ -11,7 +11,9 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/syougo1209/b-match-server/application/usecase"
 	"github.com/syougo1209/b-match-server/config"
+	"github.com/syougo1209/b-match-server/domain/model"
 )
 
 type CustomClaims struct {
@@ -22,7 +24,11 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 	return nil
 }
 
-func EnsureValidToken(cfg *config.Config) func(c echo.HandlerFunc) echo.HandlerFunc {
+type AuthMiddleware struct {
+	UseCase usecase.GetCurrentUserFromSub
+}
+
+func (am *AuthMiddleware) EnsureValidToken(cfg *config.Config) func(c echo.HandlerFunc) echo.HandlerFunc {
 	issuerURL, err := url.Parse("https://" + cfg.Auth0Domain + "/")
 
 	if err != nil {
@@ -61,22 +67,26 @@ func EnsureValidToken(cfg *config.Config) func(c echo.HandlerFunc) echo.HandlerF
 				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid Token")
 			}
 			sub := claims.(*validator.ValidatedClaims).RegisteredClaims.Subject
-			c = setSubContext(c, sub)
+			uid, err := am.UseCase.Call(c.Request().Context(), sub)
+			if err != nil {
+				return echo.NewHTTPError(http.StatusUnauthorized, "failed to find user")
+			}
+			c = SetUserIDContext(c, *uid)
 			return next(c)
 		}
 	}
 }
 
-type subKey struct{}
+type userIDKey struct{}
 
-func setSubContext(c echo.Context, sub string) echo.Context {
+func SetUserIDContext(c echo.Context, uid model.UserID) echo.Context {
 	ctx := c.Request().Context()
-	ctx = context.WithValue(ctx, subKey{}, sub)
+	ctx = context.WithValue(ctx, userIDKey{}, uid)
 	c.SetRequest(c.Request().WithContext(ctx))
 	return c
 }
 
-func getSubContext(ctx context.Context) (string, bool) {
-	sub, ok := ctx.Value(subKey{}).(string)
-	return sub, ok
+func GetUserIDContext(ctx context.Context) (model.UserID, bool) {
+	uid, ok := ctx.Value(userIDKey{}).(model.UserID)
+	return uid, ok
 }

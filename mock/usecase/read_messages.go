@@ -36,15 +36,15 @@ func (m *MockReadMessages) EXPECT() *MockReadMessagesMockRecorder {
 }
 
 // Call mocks base method.
-func (m *MockReadMessages) Call(ctx context.Context, conversationID model.ConversationID, messageID model.MessageID) error {
+func (m *MockReadMessages) Call(ctx context.Context, uid model.UserID, conversationID model.ConversationID, messageID model.MessageID) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Call", ctx, conversationID, messageID)
+	ret := m.ctrl.Call(m, "Call", ctx, uid, conversationID, messageID)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Call indicates an expected call of Call.
-func (mr *MockReadMessagesMockRecorder) Call(ctx, conversationID, messageID interface{}) *gomock.Call {
+func (mr *MockReadMessagesMockRecorder) Call(ctx, uid, conversationID, messageID interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Call", reflect.TypeOf((*MockReadMessages)(nil).Call), ctx, conversationID, messageID)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Call", reflect.TypeOf((*MockReadMessages)(nil).Call), ctx, uid, conversationID, messageID)
 }

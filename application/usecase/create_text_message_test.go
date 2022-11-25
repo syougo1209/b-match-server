@@ -74,7 +74,7 @@ func TestCreateTextMessage_Call(t *testing.T) {
 
 			u := NewCreateMessage(messageMock, conversationStateMock, conversationMock, txMock)
 
-			gotMessage, err := u.Call(ctx, model.ConversationID(1), "text", now)
+			gotMessage, err := u.Call(ctx, model.UserID(1), model.ConversationID(1), "text", now)
 			if tt.wantErr == false && err != nil {
 				t.Fatalf("want no error, but got %v", err)
 				return
