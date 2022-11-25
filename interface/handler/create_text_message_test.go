@@ -12,6 +12,7 @@ import (
 	"github.com/golang/mock/gomock"
 	"github.com/labstack/echo/v4"
 	"github.com/syougo1209/b-match-server/domain/model"
+	"github.com/syougo1209/b-match-server/interface/handler/middleware"
 	"github.com/syougo1209/b-match-server/interface/presenter"
 	mock_usecase "github.com/syougo1209/b-match-server/mock/usecase"
 	"github.com/syougo1209/b-match-server/testutils"
@@ -75,6 +76,7 @@ func TestCreateMessage_ServeHTTP(t *testing.T) {
 			c.SetPath("/conversations/:id/messages")
 			c.SetParamNames("id")
 			c.SetParamValues("1")
+			middleware.SetUserIDContext(c, 1)
 
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()

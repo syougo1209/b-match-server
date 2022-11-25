@@ -71,7 +71,7 @@ func (am *AuthMiddleware) EnsureValidToken(cfg *config.Config) func(c echo.Handl
 			if err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, "failed to find user")
 			}
-			c = setUserIDContext(c, *uid)
+			c = SetUserIDContext(c, *uid)
 			return next(c)
 		}
 	}
@@ -79,7 +79,7 @@ func (am *AuthMiddleware) EnsureValidToken(cfg *config.Config) func(c echo.Handl
 
 type userIDKey struct{}
 
-func setUserIDContext(c echo.Context, uid model.UserID) echo.Context {
+func SetUserIDContext(c echo.Context, uid model.UserID) echo.Context {
 	ctx := c.Request().Context()
 	ctx = context.WithValue(ctx, userIDKey{}, uid)
 	c.SetRequest(c.Request().WithContext(ctx))
