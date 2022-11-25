@@ -74,7 +74,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	e.POST("/conversations/:id/messages", ctmHandler.ServeHTTP)
 
 	meGroup := e.Group("/me")
-	meGroup.Use(middleware.EnsureValidToken())
+	meGroup.Use(middleware.EnsureValidToken(cfg))
 	ucfcl := usecase.NewFetchConversationList(cr)
 	fclHandler := handler.FetchConversationList{UseCase: ucfcl, Presenter: cp}
 	meGroup.GET("/conversations", fclHandler.ServeHTTP)

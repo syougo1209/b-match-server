@@ -11,6 +11,7 @@ import (
 	"github.com/auth0/go-jwt-middleware/v2/jwks"
 	"github.com/auth0/go-jwt-middleware/v2/validator"
 	"github.com/labstack/echo/v4"
+	"github.com/syougo1209/b-match-server/config"
 )
 
 type CustomClaims struct {
@@ -21,8 +22,8 @@ func (c CustomClaims) Validate(ctx context.Context) error {
 	return nil
 }
 
-func EnsureValidToken() func(c echo.HandlerFunc) echo.HandlerFunc {
-	issuerURL, err := url.Parse("https://" + "dev-0d46ipjd.us.auth0.com" + "/")
+func EnsureValidToken(cfg *config.Config) func(c echo.HandlerFunc) echo.HandlerFunc {
+	issuerURL, err := url.Parse("https://" + cfg.Auth0Domain + "/")
 
 	if err != nil {
 		log.Fatalf("Failed to parse the issuer url: %v", err)
@@ -34,7 +35,7 @@ func EnsureValidToken() func(c echo.HandlerFunc) echo.HandlerFunc {
 		provider.KeyFunc,
 		validator.RS256,
 		issuerURL.String(),
-		[]string{"http://localhost:8080"},
+		[]string{cfg.Auth0Audience},
 		validator.WithCustomClaims(
 			func() validator.CustomClaims {
 				return &CustomClaims{}
