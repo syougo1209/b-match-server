@@ -10,7 +10,7 @@ import (
 
 //go:generate mockgen -source=read_messages.go -destination=../../mock/usecase/read_messages.go
 type ReadMessages interface {
-	Call(ctx context.Context, conversationID model.ConversationID, messageID model.MessageID) error
+	Call(ctx context.Context, uid model.UserID, conversationID model.ConversationID, messageID model.MessageID) error
 }
 type readMessages struct {
 	Repo repository.ConversationStateRepository
@@ -22,9 +22,7 @@ func NewReadMessages(csr repository.ConversationStateRepository) *readMessages {
 	}
 }
 
-func (rm *readMessages) Call(ctx context.Context, conversationID model.ConversationID, messageID model.MessageID) error {
-	//uidをauthから取得する
-	uid := model.UserID(1)
+func (rm *readMessages) Call(ctx context.Context, uid model.UserID, conversationID model.ConversationID, messageID model.MessageID) error {
 	err := rm.Repo.ReadMessages(ctx, uid, conversationID, messageID)
 	if err != nil {
 		return fmt.Errorf("readMessages Call: %w", err)

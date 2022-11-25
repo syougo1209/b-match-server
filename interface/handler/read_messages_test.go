@@ -32,27 +32,27 @@ func TestReadMessages_ServeHTTP(t *testing.T) {
 		"パラメータが不適切な時": {
 			param: param{"1", invalidJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), gomock.Any(), gomock.Any()).Return(nil).AnyTimes()
 			},
 			status: http.StatusBadRequest},
 		"usecaseからerrNotFoundエラーが返ってくる時": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(model.ErrNotFound)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(model.ErrNotFound)
 			},
 			status: http.StatusNotFound,
 		},
 		"usecaseからerrNotFound以外のエラーが返ってくる時": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(errors.New("error"))
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(errors.New("error"))
 			},
 			status: http.StatusInternalServerError,
 		},
 		"処理が適切に完了したとき": {
 			param: param{"1", okJSON},
 			prepareMockFn: func(m *mock_usecase.MockReadMessages) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), model.MessageID(1)).Return(nil)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(1)).Return(nil)
 			},
 			status: http.StatusOK,
 		},

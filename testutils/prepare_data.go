@@ -15,8 +15,8 @@ func PrepareUser(ctx context.Context, t *testing.T, db *sqlx.Tx) *model.User {
 		Name:      "example",
 		CreatedAt: time.Now(),
 	}
-	result, err := db.ExecContext(ctx, "INSERT INTO user (name, created_at) VALUES (?, ?)",
-		u.Name, u.CreatedAt)
+	result, err := db.ExecContext(ctx, "INSERT INTO user (name, sub, created_at) VALUES (?, ?, ?)",
+		u.Name, "auth0id", u.CreatedAt)
 	if err != nil {
 		t.Fatalf("error insert user: %v", err)
 	}

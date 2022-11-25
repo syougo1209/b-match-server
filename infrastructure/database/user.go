@@ -60,5 +60,6 @@ func (ur *UserRepository) FindBySub(ctx context.Context, sub string) (*model.Use
 type User struct {
 	ID        uint64    `db:"id"`
 	Name      string    `db:"name"`
+	Sub       string    `db:"sub"`
 	CreatedAt time.Time `db:"created_at"`
 }

@@ -37,16 +37,16 @@ func (m *MockCreateTextMessage) EXPECT() *MockCreateTextMessageMockRecorder {
 }
 
 // Call mocks base method.
-func (m *MockCreateTextMessage) Call(ctx context.Context, cid model.ConversationID, text string, now time.Time) (*model.Message, error) {
+func (m *MockCreateTextMessage) Call(ctx context.Context, uid model.UserID, cid model.ConversationID, text string, now time.Time) (*model.Message, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Call", ctx, cid, text, now)
+	ret := m.ctrl.Call(m, "Call", ctx, uid, cid, text, now)
 	ret0, _ := ret[0].(*model.Message)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
 // Call indicates an expected call of Call.
-func (mr *MockCreateTextMessageMockRecorder) Call(ctx, cid, text, now interface{}) *gomock.Call {
+func (mr *MockCreateTextMessageMockRecorder) Call(ctx, uid, cid, text, now interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Call", reflect.TypeOf((*MockCreateTextMessage)(nil).Call), ctx, cid, text, now)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Call", reflect.TypeOf((*MockCreateTextMessage)(nil).Call), ctx, uid, cid, text, now)
 }

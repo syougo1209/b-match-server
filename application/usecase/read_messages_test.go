@@ -15,6 +15,7 @@ func TestReadMessages_Call(t *testing.T) {
 	ctx := context.Background()
 
 	type args struct {
+		uid            model.UserID
 		conversationID model.ConversationID
 		messageID      model.MessageID
 	}
@@ -24,14 +25,14 @@ func TestReadMessages_Call(t *testing.T) {
 		wantErr       bool
 	}{
 		"repositoryがエラーを返すとき、エラーを返すこと": {
-			args: args{model.ConversationID(1), model.MessageID(0)},
+			args: args{model.UserID(1), model.ConversationID(1), model.MessageID(0)},
 			prepareMockFn: func(m *mock_repository.MockConversationStateRepository) {
 				m.EXPECT().ReadMessages(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(0)).Return(errors.New("error"))
 			},
 			wantErr: true,
 		},
 		"正常に更新されたとき、エラーを返さないこと": {
-			args: args{model.ConversationID(1), model.MessageID(0)},
+			args: args{model.UserID(1), model.ConversationID(1), model.MessageID(0)},
 			prepareMockFn: func(m *mock_repository.MockConversationStateRepository) {
 				m.EXPECT().ReadMessages(gomock.Any(), model.UserID(1), model.ConversationID(1), model.MessageID(0)).Return(nil)
 			},
@@ -47,7 +48,7 @@ func TestReadMessages_Call(t *testing.T) {
 			tt.prepareMockFn(mock)
 
 			u := NewReadMessages(mock)
-			err := u.Call(ctx, tt.args.conversationID, tt.args.messageID)
+			err := u.Call(ctx, tt.args.uid, tt.args.conversationID, tt.args.messageID)
 			if tt.wantErr == false && err != nil {
 				t.Fatalf("want no error, but got %v", err)
 				return

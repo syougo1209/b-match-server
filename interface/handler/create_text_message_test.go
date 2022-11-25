@@ -37,28 +37,28 @@ func TestCreateMessage_ServeHTTP(t *testing.T) {
 		"textが不適切な時": {
 			param: invalidTextJSON,
 			prepareMockFn: func(m *mock_usecase.MockCreateTextMessage) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), "test", gomock.Any()).Return(nil, errors.New("error")).AnyTimes()
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), "test", gomock.Any()).Return(nil, errors.New("error")).AnyTimes()
 			},
 			status: http.StatusUnprocessableEntity,
 		},
 		"usecaseからerrNotFoundエラーが返ってくる時": {
 			param: okJSON,
 			prepareMockFn: func(m *mock_usecase.MockCreateTextMessage) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), "test", gomock.Any()).Return(nil, model.ErrNotFound)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), "test", gomock.Any()).Return(nil, model.ErrNotFound)
 			},
 			status: http.StatusNotFound,
 		},
 		"usecaseからerrNotFound以外のエラーが返ってくる時": {
 			param: okJSON,
 			prepareMockFn: func(m *mock_usecase.MockCreateTextMessage) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), "test", gomock.Any()).Return(nil, errors.New("error"))
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), "test", gomock.Any()).Return(nil, errors.New("error"))
 			},
 			status: http.StatusInternalServerError,
 		},
 		"処理が適切に完了したとき": {
 			param: okJSON,
 			prepareMockFn: func(m *mock_usecase.MockCreateTextMessage) {
-				m.EXPECT().Call(gomock.Any(), model.ConversationID(1), "test", gomock.Any()).Return(message, nil)
+				m.EXPECT().Call(gomock.Any(), model.UserID(1), model.ConversationID(1), "test", gomock.Any()).Return(message, nil)
 			},
 			status: http.StatusCreated,
 		},
