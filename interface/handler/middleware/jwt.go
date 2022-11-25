@@ -60,8 +60,23 @@ func EnsureValidToken(cfg *config.Config) func(c echo.HandlerFunc) echo.HandlerF
 			if err != nil {
 				return echo.NewHTTPError(http.StatusUnauthorized, "Invalid Token")
 			}
-			c.Set("claims", claims.(*validator.ValidatedClaims))
+			sub := claims.(*validator.ValidatedClaims).RegisteredClaims.Subject
+			c = setSubContext(c, sub)
 			return next(c)
 		}
 	}
+}
+
+type subKey struct{}
+
+func setSubContext(c echo.Context, sub string) echo.Context {
+	ctx := c.Request().Context()
+	ctx = context.WithValue(ctx, subKey{}, sub)
+	c.SetRequest(c.Request().WithContext(ctx))
+	return c
+}
+
+func getSubContext(ctx context.Context) (string, bool) {
+	sub, ok := ctx.Value(subKey{}).(string)
+	return sub, ok
 }

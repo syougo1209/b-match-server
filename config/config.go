@@ -12,6 +12,7 @@ type Config struct {
 	RedisPort         int    `env:"REDIS_PORT"`
 	Auth0Domain       string `env:"AUTH0_DOMAIN"`
 	Auth0Audience     string `env:"AUTH0_AUDIENCE"`
+	FrontendHost      string `env:"FRONTEND_HOST"`
 }
 
 func New() (*Config, error) {
