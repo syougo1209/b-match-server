@@ -2,7 +2,6 @@ package router
 
 import (
 	"context"
-	"log"
 	"net/http"
 
 	"github.com/go-playground/validator"
@@ -11,8 +10,6 @@ import (
 	"github.com/syougo1209/b-match-server/application/usecase"
 	"github.com/syougo1209/b-match-server/config"
 	"github.com/syougo1209/b-match-server/infrastructure/database"
-	"github.com/syougo1209/b-match-server/infrastructure/jwter"
-	"github.com/syougo1209/b-match-server/infrastructure/redis"
 	"github.com/syougo1209/b-match-server/interface/handler"
 	"github.com/syougo1209/b-match-server/interface/handler/middleware"
 	"github.com/syougo1209/b-match-server/interface/presenter"
@@ -24,16 +21,6 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	e := echo.New()
 	v := validator.New()
 
-	rcli, err := redis.NewRedis(ctx, cfg)
-	if err != nil {
-		log.Printf("failed to start redis: %v", err)
-		return nil, err
-	}
-	jwter, err := jwter.NewJWTer(rcli)
-	if err != nil {
-		log.Printf("failed to start jwter: %v", err)
-		return nil, err
-	}
 	e.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
@@ -43,24 +30,16 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	mr := &database.MessageRepository{Db: xdb}
 	csr := &database.ConversationStateRepository{Db: xdb}
 	cr := &database.ConversationRepository{Db: xdb}
-	ur := &database.UserRepository{Db: xdb}
 	tx := database.NewTransaction(xdb)
 	//presenter
 	mp := presenter.MessagePresenter{}
 	cp := presenter.ConversationPresenter{}
-
-	authMiddleware := middleware.NewAuthMiddleware(jwter)
-
-	ucel := usecase.NewEasyLogin(ur, jwter)
-	elHandler := handler.EasyLogin{UseCase: ucel}
-	e.POST("/login/easy", elHandler.ServeHTTP)
 
 	e.GET("/health_check", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, world\n")
 	})
 
 	convesationGroup := e.Group("/conversations")
-	convesationGroup.Use(authMiddleware.JwtAuthenticate)
 	ucfm := usecase.NewFetchMessages(mr)
 	fmHandler := handler.FetchMessages{UseCase: ucfm, Presenter: mp}
 	convesationGroup.GET("/:id/messages", fmHandler.ServeHTTP)
