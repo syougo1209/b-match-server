@@ -36,7 +36,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	}
 	e.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000"},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
+		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
 	//repository
@@ -73,9 +73,11 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	ctmHandler := handler.CreateTextMessage{UseCase: ucctm, Presenter: mp, Validator: v}
 	e.POST("/conversations/:id/messages", ctmHandler.ServeHTTP)
 
+	meGroup := e.Group("/me")
+	meGroup.Use(middleware.EnsureValidToken(cfg))
 	ucfcl := usecase.NewFetchConversationList(cr)
 	fclHandler := handler.FetchConversationList{UseCase: ucfcl, Presenter: cp}
-	e.GET("/me/conversations", fclHandler.ServeHTTP)
+	meGroup.GET("/conversations", fclHandler.ServeHTTP)
 
 	return e, nil
 }

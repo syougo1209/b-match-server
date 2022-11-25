@@ -10,6 +10,8 @@ type Config struct {
 	MYSQLDbName       string `env:"MYSQL_DATABASE"`
 	RedisHost         string `env:"REDIS_HOST"`
 	RedisPort         int    `env:"REDIS_PORT"`
+	Auth0Domain       string `env:"AUTH0_DOMAIN"`
+	Auth0Audience     string `env:"AUTH0_AUDIENCE"`
 }
 
 func New() (*Config, error) {
