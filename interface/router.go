@@ -22,7 +22,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	v := validator.New()
 
 	e.Use(echoMiddleware.CORSWithConfig(echoMiddleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:3000"},
+		AllowOrigins: []string{cfg.FrontendHost},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept, echo.HeaderAuthorization},
 	}))
 
