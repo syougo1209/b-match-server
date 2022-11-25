@@ -9,7 +9,7 @@ import (
 )
 
 type GetCurrentUserFromSub interface {
-	Call(ctx context.Context, sub string) (model.UserID, error)
+	Call(ctx context.Context, sub string) (*model.UserID, error)
 }
 
 type getCurrentUserFromSub struct {

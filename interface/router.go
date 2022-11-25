@@ -27,6 +27,7 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	}))
 
 	//repository
+	ur := &database.UserRepository{Db: xdb}
 	mr := &database.MessageRepository{Db: xdb}
 	csr := &database.ConversationStateRepository{Db: xdb}
 	cr := &database.ConversationRepository{Db: xdb}
@@ -38,6 +39,10 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	e.GET("/health_check", func(c echo.Context) error {
 		return c.String(http.StatusOK, "Hello, world\n")
 	})
+
+	uc := usecase.NewGetCurrentUserFromSub(ur)
+	am := middleware.AuthMiddleware{UseCase: uc}
+	e.Use(am.EnsureValidToken(cfg))
 
 	convesationGroup := e.Group("/conversations")
 	ucfm := usecase.NewFetchMessages(mr)
@@ -53,7 +58,6 @@ func NewRouter(ctx context.Context, cfg *config.Config, xdb *sqlx.DB) (*echo.Ech
 	e.POST("/conversations/:id/messages", ctmHandler.ServeHTTP)
 
 	meGroup := e.Group("/me")
-	meGroup.Use(middleware.EnsureValidToken(cfg))
 	ucfcl := usecase.NewFetchConversationList(cr)
 	fclHandler := handler.FetchConversationList{UseCase: ucfcl, Presenter: cp}
 	meGroup.GET("/conversations", fclHandler.ServeHTTP)
