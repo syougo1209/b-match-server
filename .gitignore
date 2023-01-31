@@ -1,9 +1,11 @@
 .DS_Store
 .env
 
+## backend
 /be/tmp
 
-node_modules/
+## native
+/native/node_modules/
 .expo/
 dist/
 npm-debug.*
@@ -14,6 +16,3 @@ npm-debug.*
 *.mobileprovision
 *.orig.*
 web-build/
-
-# macOS
-.DS_Store
