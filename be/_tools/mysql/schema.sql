@@ -1,6 +1,7 @@
 CREATE TABLE `user`
 (
     `id`       BIGINT UNSIGNED NOT NULL AUTO_INCREMENT COMMENT 'ユーザーの識別子',
+    `sub`     varchar(255) NOT NULL COMMENT 'auth0',
     `name`     varchar(255) NOT NULL COMMENT 'ユーザー名',
     `created_at`  DATETIME(6) NOT NULL COMMENT 'ユーザー登録日',
     PRIMARY KEY (`id`)

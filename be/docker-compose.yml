@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: ./docker/dev/Dockerfile
-    env_file: .env
+    env_file: ../.env
     ports:
       - 8080:8080
     volumes:
@@ -14,7 +14,7 @@ services:
       - db
   db:
     image: mysql:8.0
-    env_file: .env
+    env_file: ../.env
     volumes:
       - db_data:/var/lib/mysql
     ports:
