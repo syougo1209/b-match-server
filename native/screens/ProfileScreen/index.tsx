@@ -7,7 +7,7 @@ import { Container, Box } from 'native-base'
 export const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Registration'>>()
   return (
-    <Container safeArea>
+    <Container safeArea bgColor={"white"}>
       <Button
         title="Go Register"
         onPress={() =>{

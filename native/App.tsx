@@ -5,16 +5,17 @@ import { ProfileScreen } from './screens/ProfileScreen'
 import { Screens } from './Screens'
 import { RegistrationScreen } from './screens/RegistrationScreen'
 import { NativeBaseProvider} from "native-base";
+import { theme } from './styles/theme'
+
 const Stack = createNativeStackNavigator<Screens>();
 
 export default function App() {
   return (
-    <NativeBaseProvider>
+    <NativeBaseProvider theme={theme}>
       <NavigationContainer
       >
         <Stack.Navigator
           screenOptions={{ headerShown: false }}
-          initialRouteName="Conversations"
         >
           <Stack.Screen
             name="Conversations"
