@@ -2,19 +2,20 @@ import { Button } from 'react-native'
 import { useNavigation} from '@react-navigation/native'
 import { NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { Screens } from '../../Screens'
-import { SafeAreaContainer } from '../../components/elements/SafeAreaContainer';
+import { Container, Box } from 'native-base'
 
 export const ProfileScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Conversations'>>()
+  const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Registration'>>()
   return (
-    <SafeAreaContainer>
+    <Container safeArea bgColor={"white"}>
       <Button
-        title="Go n"
+        title="Go Register"
         onPress={() =>{
           console.log("hoge")
-          navigation.navigate('Conversations')
+          navigation.navigate('Registration')
         }}
       />
-    </SafeAreaContainer>
+      <Box>Hello</Box>
+    </Container>
   );
 };

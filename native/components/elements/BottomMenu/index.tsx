@@ -1,5 +1,4 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import { ProfileScreen } from '../../../screens/ProfileScreen'
 import { ConversationsScreen } from '../../../screens/ConversationsScreen'
 
