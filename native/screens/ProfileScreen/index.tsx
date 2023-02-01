@@ -5,14 +5,14 @@ import { Screens } from '../../Screens'
 import { SafeAreaContainer } from '../../components/elements/SafeAreaContainer';
 
 export const ProfileScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Conversations'>>()
+  const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Registration'>>()
   return (
     <SafeAreaContainer>
       <Button
-        title="Go n"
+        title="Go Register"
         onPress={() =>{
           console.log("hoge")
-          navigation.navigate('Conversations')
+          navigation.navigate('Registration')
         }}
       />
     </SafeAreaContainer>

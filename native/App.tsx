@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import { ConversationsScreen } from './screens/ConversationsScreen'
 import { ProfileScreen } from './screens/ProfileScreen'
 import { Screens } from './Screens'
+import { RegistrationScreen } from './screens/RegistrationScreen'
 
 const Stack = createNativeStackNavigator<Screens>();
 
@@ -22,6 +23,7 @@ export default function App() {
             options={{title: 'Welcome'}}
           />
           <Stack.Screen name="Profile" component={ProfileScreen} />
+          <Stack.Screen name="Registration" component={RegistrationScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </PaperProvider>
