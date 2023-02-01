@@ -4,7 +4,6 @@ import { NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { Screens } from '../../Screens'
 import { SafeAreaContainer } from '../../components/elements/SafeAreaContainer';
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { TextInput } from 'react-native-paper';
 
 export const RegistrationScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Conversations'>>()
@@ -12,7 +11,6 @@ export const RegistrationScreen = () => {
   return (
     <SafeAreaContainer>
       <MaterialCommunityIcons name="chevron-left" size={45} onPress={()=>navigation.navigate('Conversations')} />
-      <TextInput mode='outlined'/>
     </SafeAreaContainer>
   );
 };

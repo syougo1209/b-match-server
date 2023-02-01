@@ -3,6 +3,7 @@ import { useNavigation} from '@react-navigation/native'
 import { NativeStackNavigationProp} from '@react-navigation/native-stack';
 import { Screens } from '../../Screens'
 import { SafeAreaContainer } from '../../components/elements/SafeAreaContainer';
+import { Box } from "native-base";
 
 export const ProfileScreen = () => {
   const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Registration'>>()
@@ -15,6 +16,7 @@ export const ProfileScreen = () => {
           navigation.navigate('Registration')
         }}
       />
+      <Box>Hello</Box>
     </SafeAreaContainer>
   );
 };
