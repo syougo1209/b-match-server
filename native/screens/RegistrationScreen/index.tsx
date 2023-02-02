@@ -1,22 +1,31 @@
-import { useNavigation} from '@react-navigation/native'
-import { NativeStackNavigationProp} from '@react-navigation/native-stack';
-import { Screens } from '../../Screens'
-import { Container, VStack, Heading } from 'native-base'
-import { CustomInput } from '../../components/elements/CustomInput'
-import { ChevronIconButton } from '../../components/elements/ChevronIconButton';
-import { CustomButton } from '../../components/elements/CustomButton';
+import { Container } from 'native-base'
+import { MailAddressForm } from '../../features/userProfile/components/MailAddressForm';
+import { ReactNode, useState } from 'react'
+import { BirthDateForm } from '../../features/userProfile/components/BirthDateForm';
+import { PasswordForm } from '../../features/userProfile/components/PasswordForm'
+import { RegisterProfileContext } from '../../features/userProfile/context/RegisterProfileContext';
+import { PrefectureForm } from '../../features/userProfile/components/PrefectureForm';
+import { SexTypeForm } from '../../features/userProfile/components/SexTypeForm'
+import { NickNameForm } from '../../features/userProfile/components/NickNameForm'
 
+const RegisterComponents: ReactNode[] = [
+  <MailAddressForm />,
+  <PasswordForm />,
+  <NickNameForm />,
+  <SexTypeForm />,
+  <BirthDateForm />,
+  <PrefectureForm />,
+]
 export const RegistrationScreen = () => {
-  const navigation = useNavigation<NativeStackNavigationProp<Screens, 'Conversations'>>()
+  const [step, setStep] = useState<number>(0)
+  const onPressBackButton = () => setStep((step)=> step - 1)
+  const onPressNextButton = () => setStep((step)=> step + 1)
 
   return (
     <Container safeArea maxW="100%" bgColor="white" flex={1}>
-      <ChevronIconButton onPress={()=>navigation.navigate('Conversations')}/>
-      <VStack space={10} width="100%" p={4}>
-        <Heading size='xl'>メールアドレス</Heading>
-        <CustomInput width="100%" placeholder="lg"/>
-        <CustomButton>次へ</CustomButton>
-      </VStack>
+      <RegisterProfileContext.Provider value={{step, onPressBackButton, onPressNextButton}}>
+        {RegisterComponents[step]}
+      </RegisterProfileContext.Provider>
     </Container>
   );
 };

@@ -4,13 +4,13 @@ import { ChevronIconButton } from '../../../../components/elements/ChevronIconBu
 import { SubmitButton } from '../../../../features/userProfile/components/SubmitButton';
 import { useRegisterProfileContext } from '../../context/useRegisterProfileContext';
 
-export const SexTypeForm = () => {
+export const NickNameForm = () => {
   const {onPressBackButton, onPressNextButton} = useRegisterProfileContext()
   return (
     <>
       <ChevronIconButton onPress={onPressBackButton}/>
       <VStack space={10} width="100%" p={8}>
-        <Heading size='xl'>性別</Heading>
+        <Heading size='xl'>ニックネーム</Heading>
         <CustomInput width="100%" placeholder="lg"/>
         <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
       </VStack>
