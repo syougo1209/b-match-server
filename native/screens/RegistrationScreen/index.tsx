@@ -8,8 +8,9 @@ import { PrefectureForm } from '../../features/userProfile/components/Prefecture
 import { SexTypeForm } from '../../features/userProfile/components/SexTypeForm'
 import { NickNameForm } from '../../features/userProfile/components/NickNameForm'
 import { useRegistrationScreen } from './hooks/useRegistrationScreen';
+import { useRegisterForm } from '../../features/userProfile/register/hooks/useRegisterForm'
 
-const RegisterComponents: ReactNode[] = [
+export const RegisterComponents: ReactNode[] = [
   <MailAddressForm />,
   <PasswordForm />,
   <NickNameForm />,
@@ -19,7 +20,8 @@ const RegisterComponents: ReactNode[] = [
 ]
 
 export const RegistrationScreen = () => {
-  const { step, onPressBackButton, onPressSubmitButton } = useRegistrationScreen()
+  const {methods, onSubmit } = useRegisterForm()
+  const { step, onPressBackButton, onPressSubmitButton } = useRegistrationScreen(onSubmit)
 
   return (
     <Container safeArea maxW="100%" bgColor="white" flex={1}>
