@@ -6,14 +6,15 @@ import { PasswordForm } from '../../features/userProfile/components/PasswordForm
 import { RegisterProfileContext } from '../../features/userProfile/context/RegisterProfileContext';
 import { PrefectureForm } from '../../features/userProfile/components/PrefectureForm';
 import { SexTypeForm } from '../../features/userProfile/components/SexTypeForm'
-import { NickNameForm } from '../../features/userProfile/components/NickNameForm'
+import { NickNameFormContainer } from '../../features/userProfile/register/components/NickNameFormContainer';
 import { useRegistrationScreen } from './hooks/useRegistrationScreen';
 import { useRegisterForm } from '../../features/userProfile/register/hooks/useRegisterForm'
+import { FormProvider } from 'react-hook-form'
 
 export const RegisterComponents: ReactNode[] = [
   <MailAddressForm />,
   <PasswordForm />,
-  <NickNameForm />,
+  <NickNameFormContainer />,
   <SexTypeForm />,
   <BirthDateForm />,
   <PrefectureForm />,
@@ -25,9 +26,11 @@ export const RegistrationScreen = () => {
 
   return (
     <Container safeArea maxW="100%" bgColor="white" flex={1}>
-      <RegisterProfileContext.Provider value={{step, onPressBackButton, onPressSubmitButton}}>
-        {RegisterComponents[step]}
-      </RegisterProfileContext.Provider>
+      <FormProvider {...methods}>
+        <RegisterProfileContext.Provider value={{step, onPressBackButton, onPressSubmitButton}}>
+          {RegisterComponents[step]}
+        </RegisterProfileContext.Provider>
+      </FormProvider>
     </Container>
   );
 };

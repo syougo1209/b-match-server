@@ -18,7 +18,7 @@ type useRegisterFormReturn = {
 }
 export const useRegisterForm =(): useRegisterFormReturn => {
   const methods = useForm<TUserRegistrationForm>()
-  const postUserProfile = async (data: TUserRegistrationForm) => console.log("onsubmit")
+  const postUserProfile = async (data: TUserRegistrationForm) => console.log(data)
   const onSubmit = methods.handleSubmit(postUserProfile)
 
   return {
