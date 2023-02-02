@@ -11,7 +11,7 @@ export const NickNameForm = () => {
       <ChevronIconButton onPress={onPressBackButton}/>
       <VStack space={10} width="100%" p={8}>
         <Heading size='xl'>ニックネーム</Heading>
-        <CustomInput width="100%" placeholder="lg"/>
+        <CustomInput width="100%" placeholder="nickname"/>
         <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
       </VStack>
     </>

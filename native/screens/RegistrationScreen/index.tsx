@@ -16,6 +16,7 @@ const RegisterComponents: ReactNode[] = [
   <BirthDateForm />,
   <PrefectureForm />,
 ]
+
 export const RegistrationScreen = () => {
   const [step, setStep] = useState<number>(0)
   const onPressBackButton = () => setStep((step)=> step - 1)

@@ -11,7 +11,7 @@ export const PasswordForm = () => {
       <ChevronIconButton onPress={onPressBackButton}/>
       <VStack space={10} width="100%" p={8}>
         <Heading size='xl'>パスワード</Heading>
-        <CustomInput width="100%" placeholder="lg"/>
+        <CustomInput width="100%" type="password"/>
         <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
       </VStack>
     </>
