@@ -5,14 +5,14 @@ import { SubmitButton } from '../../../../features/userProfile/components/Submit
 import { useRegisterProfileContext } from '../../context/useRegisterProfileContext';
 
 export const PasswordForm = () => {
-  const {onPressBackButton, onPressNextButton} = useRegisterProfileContext()
+  const {onPressBackButton, onPressSubmitButton} = useRegisterProfileContext()
   return (
     <>
       <ChevronIconButton onPress={onPressBackButton}/>
       <VStack space={10} width="100%" p={8}>
         <Heading size='xl'>パスワード</Heading>
         <CustomInput width="100%" type="password"/>
-        <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
+        <SubmitButton onPress={onPressSubmitButton}>次へ</SubmitButton>
       </VStack>
     </>
   )

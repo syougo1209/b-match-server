@@ -5,7 +5,7 @@ import { SubmitButton } from '../../../../features/userProfile/components/Submit
 import { useRegisterProfileContext } from '../../context/useRegisterProfileContext';
 
 export const BirthDateForm = () => {
-  const {onPressBackButton, onPressNextButton} = useRegisterProfileContext()
+  const {onPressBackButton, onPressSubmitButton} = useRegisterProfileContext()
 
   return (
     <>
@@ -35,7 +35,7 @@ export const BirthDateForm = () => {
             }
           </Select>
         </HStack>
-        <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
+        <SubmitButton onPress={onPressSubmitButton}>次へ</SubmitButton>
       </VStack>
     </>
   )

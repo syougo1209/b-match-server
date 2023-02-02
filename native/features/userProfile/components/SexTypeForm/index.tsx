@@ -4,7 +4,7 @@ import { SubmitButton } from '../../../../features/userProfile/components/Submit
 import { useRegisterProfileContext } from '../../context/useRegisterProfileContext';
 
 export const SexTypeForm = () => {
-  const {onPressBackButton, onPressNextButton, step} = useRegisterProfileContext()
+  const {onPressBackButton, onPressSubmitButton} = useRegisterProfileContext()
   return (
     <>
       <ChevronIconButton onPress={onPressBackButton}/>
@@ -20,7 +20,7 @@ export const SexTypeForm = () => {
             </Radio>
           </Radio.Group>
         </Box>
-        <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
+        <SubmitButton onPress={onPressSubmitButton}>次へ</SubmitButton>
       </VStack>
     </>
   )

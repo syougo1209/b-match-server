@@ -7,6 +7,7 @@ import { RegisterProfileContext } from '../../features/userProfile/context/Regis
 import { PrefectureForm } from '../../features/userProfile/components/PrefectureForm';
 import { SexTypeForm } from '../../features/userProfile/components/SexTypeForm'
 import { NickNameForm } from '../../features/userProfile/components/NickNameForm'
+import { useRegistrationScreen } from './hooks/useRegistrationScreen';
 
 const RegisterComponents: ReactNode[] = [
   <MailAddressForm />,
@@ -18,13 +19,11 @@ const RegisterComponents: ReactNode[] = [
 ]
 
 export const RegistrationScreen = () => {
-  const [step, setStep] = useState<number>(0)
-  const onPressBackButton = () => setStep((step)=> step - 1)
-  const onPressNextButton = () => setStep((step)=> step + 1)
+  const { step, onPressBackButton, onPressSubmitButton } = useRegistrationScreen()
 
   return (
     <Container safeArea maxW="100%" bgColor="white" flex={1}>
-      <RegisterProfileContext.Provider value={{step, onPressBackButton, onPressNextButton}}>
+      <RegisterProfileContext.Provider value={{step, onPressBackButton, onPressSubmitButton}}>
         {RegisterComponents[step]}
       </RegisterProfileContext.Provider>
     </Container>

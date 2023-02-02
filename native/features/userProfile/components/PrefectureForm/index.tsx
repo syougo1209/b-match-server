@@ -4,7 +4,7 @@ import { SubmitButton } from '../../../../features/userProfile/components/Submit
 import { useRegisterProfileContext } from '../../context/useRegisterProfileContext';
 
 export const PrefectureForm = () => {
-  const {onPressBackButton, onPressNextButton} = useRegisterProfileContext()
+  const {onPressBackButton, onPressSubmitButton} = useRegisterProfileContext()
   const prefectures = [{id: 1, name: "北海道"}, {id: 2, name: "秋田"}, {id: 3, name: "宮城"}, {id: 4, name: "岩手"}, {id: 5, name: "福島"}]
   return (
     <>
@@ -20,11 +20,11 @@ export const PrefectureForm = () => {
                     <Text fontSize="2xl"  fontWeight="bold">{prefecture.name}</Text>
                   </Radio>
                 )
-            })
+              })
             }
           </Radio.Group>
         </Box>
-        <SubmitButton onPress={onPressNextButton}>次へ</SubmitButton>
+        <SubmitButton onPress={onPressSubmitButton}>登録する</SubmitButton>
       </VStack>
     </>
   )
